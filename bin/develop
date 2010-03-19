@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+
+import os, sys, contextlib as ctx, subprocess as sub, pipes
+
+def main():
+    chdir()
+    cmd = os.path.basename(sys.argv[0])
+    with ctx.closing(open('.%s.log' % cmd, 'w')) as log:
+        print 'Setting up your Message development environment.'
+        must('linking site-packages', log, 'python', '../bin/_setup.py', 'develop')
+        must('cleaning up', log, 'rm', '-rf', 'message.egg-info')
+
+def chdir():
+    pkg = os.path.join(os.path.dirname(sys.argv[0]), '../site-packages')
+    os.chdir(os.path.normpath(pkg))
+
+def must(title, log, *args):
+    print '  + %s...' % title,
+    sys.stdout.flush()
+    try:
+        cmd = ' '.join(pipes.quote(a) for a in args)
+        print >> log, '\n##', cmd; log.flush()
+        sub.check_call(cmd, shell=True, stdout=log, stderr=log)
+        print 'success'
+    except sub.CalledProcessError:
+        print 'FAILED'
+        print '\n Setup failed: see %r for details.' % os.path.abspath(log.name)
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
