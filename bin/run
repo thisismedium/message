@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
+### Copyright (c) 2010, Coptix, Inc.  All rights reserved.
+### See the LICENSE file for license terms and warranty disclaimer.
+
+"""run -- run the admin demo, possibly calling update first."""
+
 import os, sys, subprocess as sub
 
+## The demo to run
 RUN = 'admin/example/run-example'
 
 def main():
@@ -11,8 +17,11 @@ def main():
 def run(cmd):
     print '\nRunning %r.' % cmd
     print 'Visit <http://localhost:5280/> in your browser.\n'
+
+    ## The demo needs to be run from the script's folder.
     os.chdir(os.path.dirname(cmd))
     cmd = './%s' % os.path.basename(cmd)
+
     try:
         sub.call((cmd,))
     except KeyboardInterrupt:

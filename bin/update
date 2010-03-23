@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 
+### Copyright (c) 2010, Coptix, Inc.  All rights reserved.
+### See the LICENSE file for license terms and warranty disclaimer.
+
+"""update -- update related git repositories and dependencies"""
+
 import os, sys, contextlib as ctx, subprocess as sub, pipes, errno
 
+## Global log file.
 LOG = None
 
+## Folders used during installation.
 PACKAGES = 'py'
 REPOS = 'work'
 
+## Git repositories developed for this project.
 GITHUB = [
     ('thisismedium/md.git', '%s/md' % REPOS, 'md'),
     ('thisismedium/python-xmpp-server.git', '%s/xmpp' % REPOS, 'xmpp'),
@@ -15,6 +23,7 @@ GITHUB = [
     ('thisismedium/message-db.git', 'message-db/%s' % REPOS, 'mdb'),
 ]
 
+## Third-party dependencies that are not pure-python.
 EZ_C = [
     ('lxml', ),
     ('yaml', 'pyyaml'),
@@ -22,6 +31,7 @@ EZ_C = [
 #    ('pycurl', 'pycurl==7.16.2.1'),
 ]
 
+## Pure-python third-party dependencies.
 EZ_PY = [
     ('setuptools', 'setuptools>=0.6c11'),
     ('importlib', ),
@@ -33,6 +43,7 @@ EZ_PY = [
 
 def main(name, cmd=None):
     global LOG
+
     chdir_root()
     with ctx.closing(open('.%s.log' % os.path.basename(name), 'w')) as log:
         LOG = log
@@ -119,7 +130,7 @@ def link_package(path, pkg, result=None):
 
 def ez_c(name, *args):
     ez(name, args, (
-        'This %r package has C dependencies.  Try installing it '
+        'The %r package has C dependencies.  Try installing it '
         'through a package manager for your OS (e.g. MacPorts, Homebrew, '
         'apt-get).'
     ) % name)
@@ -128,7 +139,7 @@ def ez_py(name, *args, **kwargs):
     ez(name, args, None, **kwargs)
 
 def ez(name, args, extra):
-    must('Installing %r' % name, 'easy_install', '-U', *(args or (name,)))
+    must('Installing %r' % name, 'easy_install', *(args or (name,)))
 
 
 
