@@ -2,18 +2,15 @@
  Message
 =========
 
-Introduction
-------------
-
 Message is a collection of projects for building websites.
 
-* ``Message DB``_: a versioned datastore for structured content.
+* `Message DB`_: a versioned datastore for structured content.
 
-* ``Message Admin``_: an intuitive, framework-agnostic
+* `Message Admin`_: an intuitive, framework-agnostic
   administration. interface
 
-.. _``Message DB``: https://github.com/thisismedium/message-db
-.. _``Message Admin``: https://github.com/thisismedium/message-admin
+.. _`Message DB`: https://github.com/thisismedium/message-db
+.. _`Message Admin`: https://github.com/thisismedium/message-admin
 
 Develop
 -------
