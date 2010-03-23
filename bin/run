@@ -9,7 +9,8 @@ def main():
     run(RUN)
 
 def run(cmd):
-    print 'Running %r.' % cmd
+    print '\nRunning %r.' % cmd
+    print 'Visit <http://localhost:5280/> in your browser.\n'
     os.chdir(os.path.dirname(cmd))
     cmd = './%s' % os.path.basename(cmd)
     try:

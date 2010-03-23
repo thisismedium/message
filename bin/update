@@ -12,7 +12,7 @@ GITHUB = [
     ('thisismedium/python-xmpp-server.git', '%s/xmpp' % REPOS, 'xmpp'),
     ('thisismedium/python-sasl.git', '%s/sasl' % REPOS, 'sasl'),
     ('thisismedium/message-admin.git', 'admin'),
-    ('thisismedium/message-db.git', 'message-db' % REPOS, 'mdb'),
+    ('thisismedium/message-db.git', 'message-db/%s' % REPOS, 'mdb'),
 ]
 
 EZ_C = [
