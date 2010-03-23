@@ -17,8 +17,8 @@ Develop
 
 Message is currently under active development.
 
-We recommend installing Message into a virtual environment.  If you do
-not want to use ``virtualenv``, skip this step.  To set up an empty
+We recommend installing Message into a `virtual environment`_.  If you
+do not want to use ``virtualenv``, skip this step.  To set up an empty
 environment::
 
   sudo easy_install virtualenv
@@ -31,6 +31,8 @@ script::
   git clone git://github.com/thisismedium/message.git
   cd message
   ./bin/run
+
+.. _`virtual environment`: http://pypi.python.org/pypi/virtualenv
 
 Using Message
 -------------
