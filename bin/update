@@ -1,0 +1,169 @@
+#!/usr/bin/env python
+
+import os, sys, contextlib as ctx, subprocess as sub, pipes
+
+LOG = None
+
+PACKAGES = 'py'
+
+GITHUB = [
+    ('thisismedium/md.git', 'work/md', 'md'),
+    ('thisismedium/python-xmpp-server.git', 'work/xmpp', 'xmpp'),
+    ('thisismedium/python-sasl.git', 'work/sasl', 'sasl'),
+    ('thisismedium/message-admin.git', 'admin'),
+    ('thisismedium/message-db.git', 'work/message-db', 'mdb'),
+]
+
+EZ_C = [
+    ('lxml', ),
+    ('yaml', 'pyyaml'),
+    ('twisted', )
+#    ('pycurl', 'pycurl==7.16.2.1'),
+]
+
+EZ_PY = [
+    ('setuptools', 'setuptools>=0.6c11'),
+    ('importlib', ),
+    ('simplejson', ),
+    ('tornado', '-f', 'http://www.tornadoweb.org/', 'tornado'),
+    ('ply', ),
+    ('punjab', '-f', 'http://code.stanziq.com/punjab/releases/', 'punjab')
+]
+
+def main(name, cmd=None):
+    global LOG
+    chdir_root()
+    with ctx.closing(open('.%s.log' % os.path.basename(name), 'w')) as log:
+        LOG = log
+        update_self()
+        (update if cmd is None else globals()['update_%s' % cmd])()
+        finish()
+
+def chdir_root():
+    pkg = os.path.join(os.path.dirname(sys.argv[0]), '..')
+    os.chdir(os.path.normpath(pkg))
+
+def update():
+    update_git()
+    update_deps()
+
+def update_self():
+    print 'Updating self.'
+    gh_pull('message', '.', None, 'origin', 'master:master')
+
+def update_git():
+    print '\nFetching related git projects.'
+    for item in GITHUB: github(*item)
+
+def update_deps():
+    print '\nUpdating packages (it may take a while to compile C dependencies).'
+    for item in EZ_C: ez_c(*item)
+    for item in EZ_PY:ez_py(*item)
+
+def finish():
+    print '\nSetting up your Message development environment.'
+    os.chdir(PACKAGES)
+    must('linking into site-packages', 'python', '../bin/_setup.py', 'develop')
+    must('finishing up', 'rm', '-rf', 'message.egg-info')
+
+
+## github
+
+def github(name, path, pkg=None):
+    if not os.path.exists(path):
+        gh_clone(name, path, pkg)
+    else:
+        gh_pull(name, path, pkg)
+
+def gh_clone(name, path, pkg=None):
+    start('cloning %r' % name)
+    try:
+        shell('git', 'clone', 'git@github.com:%s' % name, path)
+        result = 'read/write'
+    except sub.CalledProcessError:
+        try:
+            shell('git', 'clone', 'git://github.com/%s' % name, path)
+            result = 'read-only'
+        except sub.CalledProcessError:
+            fail()
+    link_package(path, pkg, result)
+
+def gh_pull(name, path, pkg, *args):
+    start('pulling %r' % name)
+    orig = os.getcwd()
+    try:
+        os.chdir(path)
+        shell('git', 'pull', *args)
+        os.chdir(orig)
+        link_package(path, pkg)
+    except sub.CalledProcessError:
+        fail()
+    finally:
+        os.chdir(orig)
+
+def link_package(path, pkg, result=None):
+    try:
+        target = pkg and os.path.join(PACKAGES, pkg)
+        if pkg and not os.path.exists(target):
+            source = os.path.join('../' * (PACKAGES.count('/') + 1), path, pkg)
+            shell('ln', '-sf', source, target)
+        success(result)
+    except sub.CalledProcessError:
+        fail()
+
+
+### Easy Install
+
+def ez_c(name, *args):
+    ez(name, args, (
+        'This %r package has C dependencies.  Try installing it '
+        'through a package manager for your OS (e.g. MacPorts, Homebrew, '
+        'apt-get).'
+    ) % name)
+
+def ez_py(name, *args, **kwargs):
+    ez(name, args, None, **kwargs)
+
+def ez(name, args, extra):
+    must('Installing %r' % name, 'easy_install', '-U', *(args or (name,)))
+
+
+
+### Shell
+
+def must(title, *args):
+    start(title)
+    try:
+        shell(*args)
+        success()
+    except sub.CalledProcessError:
+        fail()
+
+def shell(*args):
+    cmd = ' '.join(pipes.quote(a) for a in args)
+    log('\n## cwd:', os.getcwd(), '\n##', cmd)
+    return sub.check_call(cmd, shell=True, stdout=LOG, stderr=LOG)
+
+
+### Reporting
+
+def log(*args):
+    print >> LOG, ' '.join(str(a) for a in args)
+    LOG.flush()
+
+def start(title):
+    print '  + %s...' % title,
+    sys.stdout.flush()
+
+def success(msg=None):
+    print msg or 'success'
+
+def fail(extra=None):
+    print 'FAILED'
+    print '\nSETUP FAILED: see %r for details.' % os.path.abspath(LOG.name)
+    if extra:
+        print extra
+    sys.exit(1)
+
+if __name__ == '__main__':
+    main(*sys.argv)

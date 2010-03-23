@@ -1,1 +1,4 @@
-site-packages/*
+*.log
+py/*
+work/*
+admin

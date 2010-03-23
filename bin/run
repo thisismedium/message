@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+import os, sys, subprocess as sub
+
+def main():
+    maybe_update()
+    print 'FIXME: run server'
+
+def maybe_update():
+    try:
+        import message
+    except ImportError:
+        update()
+
+def update():
+    cmd = list(sys.argv)
+    cmd[0] = os.path.join(os.path.dirname(sys.argv[0]), 'update')
+    if sub.call(cmd) != 0:
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
