@@ -9,8 +9,8 @@ Message is a collection of projects for building websites.
 * `Message Admin`_: an intuitive, framework-agnostic
   administration interface
 
-.. _`Message DB`: https://github.com/thisismedium/message-db
-.. _`Message Admin`: https://github.com/thisismedium/message-admin
+.. _`Message DB`: http://github.com/thisismedium/message-db
+.. _`Message Admin`: http://github.com/thisismedium/message-admin
 
 Develop
 -------
