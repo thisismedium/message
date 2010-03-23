@@ -5,16 +5,20 @@
 Introduction
 ------------
 
-Message is a collection of projects for building websites.  It is
-currently under heavy development.
+Message is a collection of projects for building websites.
 
-* Message DB: a versioned datastore for structured content.
+* ``Message DB``_: a versioned datastore for structured content.
 
-* Message Admin: an intuitive, framework-agnostic
+* ``Message Admin``_: an intuitive, framework-agnostic
   administration. interface
 
-Installation
-------------
+.. _``Message DB``: https://github.com/thisismedium/message-db
+.. _``Message Admin``: https://github.com/thisismedium/message-admin
+
+Develop
+-------
+
+Message is currently under active development.
 
 We recommend installing Message into a virtual environment.  If you do
 not want to use ``virtualenv``, skip this step.  To set up an empty
