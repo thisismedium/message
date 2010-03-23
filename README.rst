@@ -18,14 +18,14 @@ Installation
 
 We recommend installing Message into a virtual environment.  If you do
 not want to use ``virtualenv``, skip this step.  To set up an empty
-environment:
+environment::
 
   sudo easy_install virtualenv
   virtualenv --no-site-packages message-dev
   . message-dev/bin/activate
 
 To install Message, clone this repository and execute the ``run``
-script:
+script::
 
   git clone git://github.com/thisismedium/message.git
   cd message
