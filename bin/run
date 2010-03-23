@@ -2,13 +2,24 @@
 
 import os, sys, subprocess as sub
 
+RUN = 'admin/example/run-example'
+
 def main():
     maybe_update()
-    print 'FIXME: run server'
+    run(RUN)
+
+def run(cmd):
+    print 'Running %r.' % cmd
+    os.chdir(os.path.dirname(cmd))
+    cmd = './%s' % os.path.basename(cmd)
+    try:
+        sub.call((cmd,))
+    except KeyboardInterrupt:
+        pass
 
 def maybe_update():
     try:
-        import message
+        import mdb
     except ImportError:
         update()
 
