@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
-import os, sys, contextlib as ctx, subprocess as sub, pipes
+import os, sys, contextlib as ctx, subprocess as sub, pipes, errno
 
 LOG = None
 
 PACKAGES = 'py'
+REPOS = 'work'
 
 GITHUB = [
-    ('thisismedium/md.git', 'work/md', 'md'),
-    ('thisismedium/python-xmpp-server.git', 'work/xmpp', 'xmpp'),
-    ('thisismedium/python-sasl.git', 'work/sasl', 'sasl'),
+    ('thisismedium/md.git', '%s/md' % REPOS, 'md'),
+    ('thisismedium/python-xmpp-server.git', '%s/xmpp' % REPOS, 'xmpp'),
+    ('thisismedium/python-sasl.git', '%s/sasl' % REPOS, 'sasl'),
     ('thisismedium/message-admin.git', 'admin'),
-    ('thisismedium/message-db.git', 'work/message-db', 'mdb'),
+    ('thisismedium/message-db.git', 'message-db' % REPOS, 'mdb'),
 ]
 
 EZ_C = [
@@ -50,6 +51,8 @@ def update():
 def update_self():
     print 'Updating self.'
     gh_pull('message', '.', None, 'origin', 'master:master')
+    makedirs(PACKAGES)
+    makedirs(REPOS)
 
 def update_git():
     print '\nFetching related git projects.'
@@ -143,6 +146,13 @@ def shell(*args):
     cmd = ' '.join(pipes.quote(a) for a in args)
     log('\n## cwd:', os.getcwd(), '\n##', cmd)
     return sub.check_call(cmd, shell=True, stdout=LOG, stderr=LOG)
+
+def makedirs(path, *mode):
+    try:
+        os.makedirs(path, *mode)
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise
 
 
 ### Reporting
