@@ -47,7 +47,6 @@ def main(name, cmd=None):
     chdir_root()
     with ctx.closing(open('.%s.log' % os.path.basename(name), 'w')) as log:
         LOG = log
-        update_self()
         (update if cmd is None else globals()['update_%s' % cmd])()
         finish()
 
@@ -56,6 +55,7 @@ def chdir_root():
     os.chdir(os.path.normpath(pkg))
 
 def update():
+    update_self()
     update_git()
     update_deps()
 
