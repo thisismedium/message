@@ -33,7 +33,7 @@ EZ_C = [
 
 ## Pure-python third-party dependencies.
 EZ_PY = [
-    ('setuptools', 'setuptools>=0.6c11'),
+    ('setuptools', '-U', 'setuptools>=0.6c11'),
     ('importlib', ),
     ('simplejson', ),
     ('tornado', '-f', 'http://www.tornadoweb.org/', 'tornado'),
