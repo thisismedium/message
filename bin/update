@@ -27,7 +27,7 @@ GITHUB = [
 EZ_C = [
     ('lxml', ),
     ('yaml', 'pyyaml'),
-    ('twisted', )
+    ('twisted', '-f', 'http://pypi.python.org/pypi/Twisted')
 #    ('pycurl', 'pycurl==7.16.2.1'),
 ]
 
