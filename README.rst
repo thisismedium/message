@@ -30,6 +30,7 @@ script::
 
   git clone git://github.com/thisismedium/message.git
   cd message
+  sudo ./bin/update deps # If you're not using a virtualenv
   ./bin/run
 
 .. _`virtual environment`: http://pypi.python.org/pypi/virtualenv
