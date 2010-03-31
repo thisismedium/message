@@ -10,6 +10,11 @@ import os, sys, contextlib as ctx, subprocess as sub, pipes, errno
 ## Global log file.
 LOG = None
 
+## Virtualenv
+VE = 'mdev'
+EZ = None
+PYTHON = None
+
 ## Folders used during installation.
 PACKAGES = 'py'
 REPOS = 'work'
@@ -20,7 +25,7 @@ GITHUB = [
     ('thisismedium/python-xmpp-server.git', '%s/xmpp' % REPOS, 'xmpp'),
     ('thisismedium/python-sasl.git', '%s/sasl' % REPOS, 'sasl'),
     ('thisismedium/message-admin.git', 'admin'),
-    ('thisismedium/message-db.git', 'message-db/%s' % REPOS, 'mdb'),
+    ('thisismedium/message-db.git', 'message-db', 'mdb'),
 ]
 
 ## Third-party dependencies that are not pure-python.
@@ -47,6 +52,7 @@ def main(name, cmd=None):
     chdir_root()
     with ctx.closing(open('.%s.log' % os.path.basename(name), 'w')) as log:
         LOG = log
+        update_self()
         (update if cmd is None else globals()['update_%s' % cmd])()
         finish()
 
@@ -55,15 +61,22 @@ def chdir_root():
     os.chdir(os.path.normpath(pkg))
 
 def update():
-    update_self()
     update_git()
     update_deps()
 
 def update_self():
     print 'Updating self.'
+    make_ve()
     gh_pull('message', '.', None, 'origin', 'master:master')
     makedirs(PACKAGES)
     makedirs(REPOS)
+
+def make_ve():
+    global EZ, PYTHON
+
+    must('Making virtualenv', 'virtualenv', VE)
+    EZ = os.path.join(os.getcwd(), VE, 'bin', 'easy_install')
+    PYTHON = os.path.join(os.getcwd(), VE, 'bin', 'python')
 
 def update_git():
     print '\nFetching related git projects.'
@@ -77,7 +90,7 @@ def update_deps():
 def finish():
     print '\nSetting up your Message development environment.'
     os.chdir(PACKAGES)
-    must('linking into site-packages', 'python', '../bin/_setup.py', 'develop')
+    must('linking into site-packages', PYTHON, '../bin/_setup.py', 'develop')
     must('finishing up', 'rm', '-rf', 'message.egg-info')
 
 
@@ -139,7 +152,7 @@ def ez_py(name, *args, **kwargs):
     ez(name, args, None, **kwargs)
 
 def ez(name, args, extra):
-    must('Installing %r' % name, 'easy_install', *(args or (name,)))
+    must('Installing %r' % name, EZ, *(args or (name,)))
 
 
 

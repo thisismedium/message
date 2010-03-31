@@ -17,27 +17,24 @@ Develop
 
 Message is currently under active development.
 
-We recommend installing Message into a `virtual environment`_.  If you
-do not want to use ``virtualenv``, skip this step.  To set up an empty
-environment::
-
-  sudo easy_install virtualenv
-  virtualenv --no-site-packages message-dev
-  . message-dev/bin/activate
-
 To install Message, clone this repository and execute the ``run``
 script::
 
   git clone git://github.com/thisismedium/message.git
   cd message
-  sudo ./bin/update deps # If you're not using a virtualenv
   ./bin/run
 
-.. _`virtual environment`: http://pypi.python.org/pypi/virtualenv
+The first time you ``run`` Message, it will create a virtualenv,
+install third-party dependencies, and link in related projects.  The
+layout looks like this::
+
+  admin       # The message-admin project
+  mdev        # A Message virtualenv
+  message-db  # The message-db project
+  py          # Python packages that are linked into site-packages
+  work        # Related github projects
 
 Using Message
 -------------
 
 With the server running, visit http://localhost:5280/ in a browser.
-
-

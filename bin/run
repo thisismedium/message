@@ -1,43 +1,22 @@
-#!/usr/bin/env python
+#!/bin/sh
 
-### Copyright (c) 2010, Coptix, Inc.  All rights reserved.
-### See the LICENSE file for license terms and warranty disclaimer.
+bin=`dirname ${0}`
+base=`dirname ${bin}`
+ve="${base}/mdev"
+python="${ve}/bin/python"
+activate="${ve}/bin/activate"
 
-"""run -- run the admin demo, possibly calling update first."""
+must() {
+    $@ && return
+    exit 1
+}
 
-import os, sys, subprocess as sub
+([ -e "${python}" ] && ($python -c 'import mdb' 2>/dev/null)) \
+    || must ${bin}/update
 
-## The demo to run
-RUN = 'admin/example/run-example'
+echo "\nRunning '${base}/admin/example/run-example'."
+echo "Visit <http://localhost:5280/> in your browser.\n"
 
-def main():
-    maybe_update()
-    run(RUN)
-
-def run(cmd):
-    print '\nRunning %r.' % cmd
-    print 'Visit <http://localhost:5280/> in your browser.\n'
-
-    ## The demo needs to be run from the script's folder.
-    os.chdir(os.path.dirname(cmd))
-    cmd = './%s' % os.path.basename(cmd)
-
-    try:
-        sub.call((cmd,))
-    except KeyboardInterrupt:
-        pass
-
-def maybe_update():
-    try:
-        import mdb
-    except ImportError:
-        update()
-
-def update():
-    cmd = list(sys.argv)
-    cmd[0] = os.path.join(os.path.dirname(sys.argv[0]), 'update')
-    if sub.call(cmd) != 0:
-        sys.exit(1)
-
-if __name__ == '__main__':
-    main()
+. ${ve}/bin/activate
+cd ${base}/admin/example
+exec ./run-example
