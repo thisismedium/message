@@ -56,9 +56,12 @@ def main(name, cmd=None):
         (update if cmd is None else globals()['update_%s' % cmd])()
         finish()
 
-def chdir_root():
+def root_path():
     pkg = os.path.join(os.path.dirname(sys.argv[0]), '..')
-    os.chdir(os.path.normpath(pkg))
+    return os.path.normpath(pkg)
+
+def chdir_root():
+    os.chdir(root_path())
 
 def update():
     update_git()
@@ -67,6 +70,7 @@ def update():
 def update_self():
     print 'Updating self.'
     make_ve()
+    apply_patches()
     gh_pull('message', '.', None, 'origin', 'master:master')
     makedirs(PACKAGES)
     makedirs(REPOS)
@@ -194,10 +198,35 @@ def success(msg=None):
 
 def fail(extra=None):
     print 'FAILED'
-    print '\nSETUP FAILED: see %r for details.' % os.path.abspath(LOG.name)
+    print '\nSETUP FAILED: see %r for details.' % os.path.join(root_path(), LOG.name)
     if extra:
         print extra
     sys.exit(1)
+
+
+### Patches
+
+PATCHES = []
+
+def patch(proc):
+    PATCHES.append(proc)
+    return proc
+
+def apply_patches():
+    for patch in PATCHES:
+        patch()
+
+@patch
+def changed_folder_names():
+    if not os.path.exists('message-db'):
+        return
+
+    os.chdir('py')
+    must('Unlinking Message', PYTHON, '../bin/_setup.py', 'develop', '-u')
+    os.chdir('..')
+    must('Removing py', 'rm', '-rf', 'py')
+    must('Moving work => more', 'mv', 'work', 'more')
+    must('Moving message-db => db', 'mv', 'message-db', 'db')
 
 if __name__ == '__main__':
     main(*sys.argv)
