@@ -16,8 +16,8 @@ EZ = None
 PYTHON = None
 
 ## Folders used during installation.
-PACKAGES = 'py'
-REPOS = 'work'
+PACKAGES = '.py'
+REPOS = 'more'
 
 ## Git repositories developed for this project.
 GITHUB = [
@@ -25,7 +25,7 @@ GITHUB = [
     ('thisismedium/python-xmpp-server.git', '%s/xmpp' % REPOS, 'xmpp'),
     ('thisismedium/python-sasl.git', '%s/sasl' % REPOS, 'sasl'),
     ('thisismedium/message-admin.git', 'admin'),
-    ('thisismedium/message-db.git', 'message-db', 'mdb'),
+    ('thisismedium/message-db.git', 'db', 'mdb'),
 ]
 
 ## Third-party dependencies that are not pure-python.

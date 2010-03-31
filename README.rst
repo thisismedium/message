@@ -29,10 +29,10 @@ install third-party dependencies, and link in related projects.  The
 layout looks like this::
 
   admin       # The message-admin project
+  db          # The message-db project
   mdev        # A Message virtualenv
-  message-db  # The message-db project
-  py          # Python packages that are linked into site-packages
-  work        # Related github projects
+  more        # Related github projects
+  .py         # Python packages that are linked into site-packages
 
 Using Message
 -------------
