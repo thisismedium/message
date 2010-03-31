@@ -14,8 +14,10 @@ must() {
 ([ -e "${python}" ] && ($python -c 'import mdb' 2>/dev/null)) \
     || must ${bin}/update
 
-echo "\nRunning '${base}/admin/example/run-example'."
-echo "Visit <http://localhost:5280/> in your browser.\n"
+echo "\n**************************************************"
+echo "* Running '${base}/admin/example/run-example'."
+echo "* Open <http://localhost:5280/> in your browser."
+echo "**************************************************\n"
 
 . ${ve}/bin/activate
 cd ${base}/admin/example

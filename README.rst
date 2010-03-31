@@ -20,9 +20,9 @@ Message is currently under active development.
 To install Message, clone this repository and execute the ``run``
 script::
 
+  sudo easy_install virtualenv
   git clone git://github.com/thisismedium/message.git
-  cd message
-  ./bin/run
+  ./message/bin/run
 
 The first time you ``run`` Message, it will create a virtualenv,
 install third-party dependencies, and link in related projects.  The
