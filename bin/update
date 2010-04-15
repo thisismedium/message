@@ -43,7 +43,8 @@ EZ_PY = [
     ('simplejson', ),
     ('tornado', '-f', 'http://www.tornadoweb.org/', 'tornado'),
     ('ply', ),
-    ('punjab', '-f', 'http://code.stanziq.com/punjab/releases/', 'punjab')
+    ('avro', ),
+    ('punjab', '-f', 'http://code.stanziq.com/punjab/releases/', 'punjab'),
 ]
 
 def main(name, cmd=None):
