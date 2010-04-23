@@ -7,3 +7,4 @@ message-db
 .py
 db
 more
+docs/_build

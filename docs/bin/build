@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import os, sys, glob, markdown, contextlib as ctx
+from tornado import template
+
+BASE = os.path.dirname(__file__)
+
+def main(source, dest):
+    os.system('mkdir -p %s' % dest)
+    tpl = template.Template(slurp(os.path.join(BASE, 'template.html')))
+
+    for path in glob.iglob(os.path.join(source, '*.md')):
+        render(tpl, path, dest)
+
+def render(tpl, path, dest):
+    (name, ext) = os.path.splitext(os.path.basename(path))
+    out = os.path.join(dest, '%s.html' % name)
+
+    if not newer(path, out):
+        return
+
+    with ctx.closing(open(out, 'w+')) as port:
+        port.write(tpl.generate(
+            title=name,
+            body=lambda: RENDER[ext](slurp(path))
+        ))
+
+RENDER = {
+    '.md': lambda t: markdown.markdown(t, extensions=['codehilite'])
+}
+
+def newer(a, b):
+    return os.stat(a).st_ctime > os.stat(b).st_ctime
+
+def slurp(path):
+    with ctx.closing(open(path, 'r')) as port:
+        return port.read()
+
+if __name__ == '__main__':
+    main(*sys.argv[1:])

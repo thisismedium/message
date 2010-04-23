@@ -21,4 +21,4 @@ echo "**************************************************\n"
 
 . ${ve}/bin/activate
 cd ${base}/admin/example
-exec ./run-example
+exec ./run-example $@
