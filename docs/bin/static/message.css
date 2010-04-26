@@ -1,0 +1,142 @@
+@import url(reset.css);
+@import url(hilite.css);
+
+html {
+  height: 100%;
+  margin-bottom:0px;
+  font-family: helvetica, arial, sans-serif; }
+
+html, body {
+  color: #eee;
+  background: #000;
+  background: #222;
+  font-size: 12px;
+  line-height:16px; }
+
+body {
+  text-align: center; }
+
+h1, h2, h3, h4 {
+  color:#eee;
+  font-weight: bold; }
+
+    h1 > a, h2 > a, h3 > a, h4 > a {
+      color: inherit;
+      text-decoration: none; }
+
+    h1 > a:hover, h2 > a:hover, h3 > a:hover, h4 > a:hover {
+      text-decoration: underline; }
+
+h1 {
+  font-size: 2em; }
+
+h2, h3 {
+  font-family:'Trebuchet MS', sans-serif;  
+  font-size:18px;
+  font-weight:normal;
+  margin-bottom:12px; }
+
+.inner {
+  position:relative;
+  margin: 0px auto;
+  width: 785px;
+  text-align: left; }
+
+#hd {
+  height:392px;
+  border-top: 7px #222 solid;
+  background: #fff;
+  color:#222; }
+
+  #hd a {
+    text-decoration: none;
+    color: #7D5A8E; }
+
+  #hd a:hover {
+    text-decoration: underline;
+    color: #683F7C; }
+
+#about {
+  position:absolute;
+  top:80px; left:0px;
+  width:227px;
+  padding-top:60px;
+  font-size:14px;
+  line-height:20px; }
+  
+  #about h1 {
+    font-weight: normal;
+    margin: 0 0 1em 0;
+    color: #222; }
+
+#hd img {
+  position:absolute;
+  top:31px; left:320px; }
+
+#bd {
+  color:#c8c8c8;
+  background:#222;
+  padding: 1em 0; }
+
+#bd strong, #bd code {
+  font-weight: bold;
+  color: #d8d8d8; }
+
+#bd em {
+  font-style: italic; }  
+
+#bd h2 {
+  font-weight: normal;
+  font-size: 1.5em;
+  margin: 40px 0 20px 0; }
+
+#bd h3 {
+  font-weight: normal;    
+  font-size: 1.3em;
+  margin: 30px 0 15px 0; }
+
+#bd p, #bd li {
+  margin-bottom: 1em;
+  line-height: 1.5em;
+  text-align: justify; }
+  
+#main {
+  font-size: 1.4em;
+  float:left;
+  width:500px; }
+
+pre {
+  background-color: #333;
+  color:#eee;
+  margin: 10px 0 20px 0;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  line-height: 1.5em; }
+
+#main li {
+  list-style-type: square;
+  margin-left: 2em; }
+
+#side {
+  float:left;
+  width:200px;
+  margin-left:85px; }
+
+.nav a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.8; }
+
+.nav a:hover {
+  text-decoration: underline;
+  opacity: 1; }
+  
+hr.clear {
+  width:auto;
+  border:none;
+  height:1px;
+  clear:both; }
+
+#ft {
+    clear: both;
+    height: 2em; }

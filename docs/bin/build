@@ -1,13 +1,31 @@
 #!/usr/bin/env python
 
 import os, sys, glob, markdown, contextlib as ctx
+from lxml import etree, html
 from tornado import template
 
 BASE = os.path.dirname(__file__)
+PAGE = os.path.join(BASE, 'page.html')
+STATIC = os.path.join(BASE, 'static')
 
 def main(source, dest):
     os.system('mkdir -p %s' % dest)
-    tpl = template.Template(slurp(os.path.join(BASE, 'template.html')))
+    static(source, dest)
+    pages(source, dest)
+
+
+### Static Resources
+
+def static(source, dest):
+    folder = os.path.abspath(STATIC)
+    target = os.path.abspath(os.path.join(dest, os.path.basename(STATIC)))
+    os.system('ln -sfn %s %s' % (folder, target))
+
+
+### Content
+
+def pages(source, dest):
+    tpl = template.Template(slurp(PAGE))
 
     for path in glob.iglob(os.path.join(source, '*.md')):
         render(tpl, path, dest)
@@ -16,17 +34,16 @@ def render(tpl, path, dest):
     (name, ext) = os.path.splitext(os.path.basename(path))
     out = os.path.join(dest, '%s.html' % name)
 
-    if not newer(path, out):
+    if not (newer(path, out) or newer(PAGE, out) or newer(__file__, out)):
         return
 
     with ctx.closing(open(out, 'w+')) as port:
-        port.write(tpl.generate(
-            title=name,
-            body=lambda: RENDER[ext](slurp(path))
-        ))
+        port.write(tpl.generate(**RENDER[ext](slurp(path), {
+            'title': name
+        })))
 
 RENDER = {
-    '.md': lambda t: markdown.markdown(t, extensions=['codehilite'])
+    '.md': lambda t, c: md(t, c)
 }
 
 def newer(a, b):
@@ -35,6 +52,41 @@ def newer(a, b):
 def slurp(path):
     with ctx.closing(open(path, 'r')) as port:
         return port.read()
+
+
+### Markdown
+
+def md(text, ctx):
+    return md_postprocess(markdown.markdown(text, extensions=['codehilite']), ctx)
+
+def md_postprocess(data, ctx):
+    main = html.fragments_fromstring(data)
+    about = []
+    screenshots = []
+
+    while len(main) != 0 and main[0].tag != 'h2':
+        frag = main.pop(0)
+        if frag.tag == 'h1':
+            ctx['title'] = frag.text
+
+        for node in frag.findall('img'):
+            node.getparent().remove(node)
+            screenshots.append(node)
+        about.append(frag)
+
+    return update(
+        ctx,
+        about=unfrag(about),
+        screenshots=unfrag(screenshots),
+        main=unfrag(main)
+    )
+
+def update(obj, *args, **kw):
+    obj.update(*args, **kw)
+    return obj
+
+def unfrag(fragments):
+    return ''.join(html.tostring(f) for f in fragments)
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
